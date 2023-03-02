@@ -19,7 +19,6 @@ def register(request):
             elif User.objects.filter(email=email).exists():
                 messages.info(request,'email taken')
                 return redirect('user/register/')
-
             else:
                 user=User.objects.create_user(username=username,password=password1,email=email,first_name=first_name)
                 user.save();
@@ -41,13 +40,13 @@ def login(request):
         password=request.POST['password']
 
     else:
-        return render(request,'login.html')
+        return render(request,'userlogin.html')
 
     user=auth.authenticate(username=username,password=password)    
 
     if user is not None:
         auth.login(request,user)
-        return redirect("/")
+        return redirect("user/register/")
     else:
         messages.info(request,"invalid login")    
         return redirect("user/login/")
