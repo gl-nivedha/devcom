@@ -1,0 +1,27 @@
+<html>
+    <head>
+        <title>
+            User Booking
+        </title>
+    </head>
+    <body>
+        <form action="" method="post">
+            {% csrf_token %}
+            <input type="text" name="Contact" placeholder="Contact"><br>
+            <input type="text" name="Reason" placeholder="Reason"><br>
+            <input type="text" name="Council" placeholder="Council"><br>
+            <input type="text" name="Room" placeholder="Room"><br>
+            <input type="date" name="start_date" placeholder="Start date"><br>
+            <input type="date" name="end_date" placeholder="End date"><br>
+            <input type="submit"> 
+            
+
+        </form>
+        <div>
+            {% for message in messages %}
+            <h3> {{message}} </h3>
+            {% endfor %}
+
+        </div>
+      </body>
+</html>

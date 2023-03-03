@@ -1,10 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.http import HttpResponse
 
 def home(request):
-    return HttpResponse("home")
+    return render(request,"home.html")
 def user(request):
-    return HttpResponse("user page")    
+    return render(request,"userpage.html")    
     
 
 
