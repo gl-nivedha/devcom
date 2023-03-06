@@ -11,11 +11,11 @@ from rest_framework import status
 
 # Create your views here.
 @api_view(['GET','POST'])
+
+    
+
+    
 def book(request):
-    
-
-    
-
     if request.method=="POST":
         
         serializer=booking_ser(data=request.data)
