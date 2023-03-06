@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'rest_framework',
     'userbooking.apps.UserbookingConfig',
     'useraccounts.apps.UseraccountsConfig',
     'django.contrib.admin',

@@ -24,3 +24,4 @@ urlpatterns = [
     path('user/',include('useraccounts.urls')),
     path('',include('userbooking.urls')),
 ]
+    
