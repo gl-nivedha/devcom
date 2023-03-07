@@ -1,59 +1,35 @@
-from django.shortcuts import render,redirect
-from django.http import HttpResponse
-from django.contrib import messages
-from django.contrib.auth.models import User, auth
-from useraccounts.models import register
-from .serializers import register_ser, login_ser
-from django.http import JsonResponse
-from rest_framework.decorators import api_view
+from rest_framework import generics, permissions
 from rest_framework.response import Response
-from rest_framework import status
+from knox.models import AuthToken
+from .serializers import UserSerializer, RegisterSerializer
 
+# Register API
+class RegisterAPI(generics.GenericAPIView):
+    serializer_class = RegisterSerializer
 
-# Create your views here.
-@api_view(['GET','POST'])
-def user_register(request):
-    if request.method=="POST":
-        serializer=register_ser(data=request.data)
-        try:
-            serializer.is_valid(raise_exception="True")
-        except :
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            serializer.save()
-            return Response(serializer.data,status=status.HTTP_201_CREATED)
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        return Response({
+        "user": UserSerializer(user, context=self.get_serializer_context()).data,
+        "token": AuthToken.objects.create(user)[1]
+        })
+
+from django.contrib.auth import login
+
+from rest_framework import permissions
+from rest_framework.authtoken.serializers import AuthTokenSerializer
+from knox.views import LoginView as KnoxLoginView
+
+class LoginAPI(KnoxLoginView):
+    permission_classes = (permissions.AllowAny,)
+
+    def post(self, request, format=None):
+        serializer = AuthTokenSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        login(request, user)
+        return super(LoginAPI, self).post(request, format=None)
+
         
-        
-
-
-    else:
-
-        reg = register.objects.all()
-        serializer = register_ser(reg,many=True)  
-        return JsonResponse(serializer.data,safe=False)   
-    
-@api_view(['GET','POST'])
-def login(request):
-    if request.method=="POST":
-         serializer=login_ser(data=request.data)
-         try:
-            serializer.is_valid(raise_exception="True")
-         except :
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-         else:
-            serializer.save()
-            return Response(serializer.data,status=status.HTTP_201_CREATED)
-    else:
-        logs = register.objects.all()  
-        serializer = login_ser(logs,many=True)  
-        return JsonResponse(serializer.data,safe=False)   
-    
-        
-
-    
-
-    
-
-
-
-

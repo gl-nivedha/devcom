@@ -22,7 +22,7 @@ urlpatterns = [
     path('',include('login.urls')),
     path('user/',include('login.urls')),
     path('',include('useraccounts.urls')),
-    path('api-token-auth', views.obtain_auth_token),
+    
     path('',include('userbooking.urls')),
 ]
     
